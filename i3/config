@@ -160,6 +160,17 @@ bindsym $mod+o border none
 bar {
     status_command i3status
     font xft:Cousine, Font Awesome 11
+    colors {
+    background #000000
+    statusline #2E9AFE
+    separator #000000
+
+    focused_workspace  #000000 #000000 #2E9AFE
+    active_workspace   #000000 #000000 #ffffff
+    inactive_workspace #000000 #000000 #0101DF
+    urgent_workspace   #000000 #000000 #FF0000
+  }
+
 }
 
 client.focused #00b0ef #00b0ef #141414 #ff7066
