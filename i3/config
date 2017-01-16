@@ -177,4 +177,10 @@ bindsym $mod+p workspace prev
 bindsym $mod+mod1+n move container to workspace next
 bindsym $mod+mod1+p move container to workspace prev
 
+# Screen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
+bindstm XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
+# bindsym $mod+F11 exec xbacklight -dec 20
+# bindsym $mod+F12 exec xbacklight -inc 20
+
 
