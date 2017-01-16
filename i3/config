@@ -155,10 +155,15 @@ bar {
         status_command i3status
 }
 
+client.focused #00b0ef #00b0ef #141414 #ff7066
+client.focused_inactive #141414 #141414 #00b0ef #472b2a
+client.unfocused #141414 #141414 #7d7d7d #141414
+client.urgent #ff7066 #ff7066 #141414 #ff7066
+
 ### My stuff ###
 # Sound Control
 bindsym XF86AudioRaiseVolume exec amixer -q set Master 5%+ -q # increase volume
-bindsym XF86AudioLowerVolume exex amixer -q set Master 5%- -q # decrease volume
+bindsym XF86AudioLowerVolume exec amixer -q set Master 5%- -q # decrease volume
 bindsym XF86AudioMute exec aximer -q set Master toogle # mute volume
 # bindsym $mod+F2 exec amixer set Master 5%-
 # bindsym $mod+F3 exec amixer set Master 5%+
