@@ -1,4 +1,3 @@
 # config
-My configuration files.
+My Arch-i3 configuration files.
 
-<h4>Vim</h4> https://github.com/coolceph/vimrc
