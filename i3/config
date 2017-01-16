@@ -98,8 +98,8 @@ bindsym $mod+a focus parent
 bindsym $mod+1 workspace 1|
 bindsym $mod+2 workspace 2|
 bindsym $mod+3 workspace 3|; exec nautilus
-bindsym $mod+4 workspace 4|
-bindsym $mod+5 workspace 5|
+bindsym $mod+4 workspace 4|; exec firefox
+bindsym $mod+5 workspace 5| 
 bindsym $mod+6 workspace 6
 bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace 8
@@ -201,11 +201,14 @@ bindstm XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightne
 # bindsym $mod+F11 exec xbacklight -dec 20
 # bindsym $mod+F12 exec xbacklight -inc 20
 
+# Touchpad controls
+bindsym XF86TouchpadToggle exec ./toggletouchpad.sh
 
 ### Start-Up apps
 # Set a Wallpaper
 exec --no-startup-id nitrogen --restore # First run nitrogen and select picture
 # exec --no-startup-id feh --bg-scale ~/Pictures/Wallpapers/HowToLearnEmacs.png
+exec --no-startup-id i3-msg 'workspace 4: ; exec /usr/bin/firefox'
 
 
 ### My own Shortcuts
