@@ -154,3 +154,13 @@ bindsym $mod+r mode "resize"
 bar {
         status_command i3status
 }
+
+### My stuff ###
+# Sound Control
+bindsym XF86AudioRaiseVolume exec amixer -q set Master 5%+ -q # increase volume
+bindsym XF86AudioLowerVolume exex amixer -q set Master 5%- -q # decrease volume
+bindsym XF86AudioMute exec aximer -q set Master toogle # mute volume
+
+
+
+
