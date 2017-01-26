@@ -11,6 +11,9 @@
 
 set $mod Mod4
 
+# Hide egge borders <none|vertical|horizontal|both>
+hide_edge_borders both
+
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango:monospace 8
@@ -37,7 +40,7 @@ bindsym $mod+Return exec gnome-terminal
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-#bindsym $mod+d exec dmenu_run
+#bindsym $mod+d exec --no-startup-id dmenu_run -b -fn 'Dejavu Sans Mono:10' -nb '#111111' -nf '#ffffff' -sb '#111111' -sf '#c80000'
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -181,7 +184,9 @@ client.urgent #ff7066 #ff7066 #141414 #ff7066
 ########## My stuff ##########
 # Sound Control
 bindsym XF86AudioRaiseVolume exec amixer -q set Master 5%+ -q # increase volume
+# bindsym $mod+SHIFT+Up exec amixer set Master 5.0%+
 bindsym XF86AudioLowerVolume exec amixer -q set Master 5%- -q # decrease volume
+# bindsym $mod+SHIFT+Down exec amixer set Master 5.0%-
 bindsym XF86AudioMute exec aximer -q set Master toggle # mute volume
 # bindsym $mod+F2 exec amixer set Master 5%-
 # bindsym $mod+F3 exec amixer set Master 5%+
@@ -208,12 +213,11 @@ bindsym XF86TouchpadToggle exec ./toggletouchpad.sh
 # Set a Wallpaper
 exec --no-startup-id nitrogen --restore # First run nitrogen and select picture
 # exec --no-startup-id feh --bg-scale ~/Pictures/Wallpapers/HowToLearnEmacs.png
-exec --no-startup-id i3-msg 'workspace 4: ; exec /usr/bin/firefox'
-
+exec --no-startup-id i3-msg 'workspace 4:; exec /usr/bin/firefox'
 
 ### My own Shortcuts
 bindsym $mod+m exec rhythmbox
-
+bindsym Print exec scrot 'Screenshot - %Y-%m-%d--%_$wx$h_scrot.png' -e 'mv $f ~/Pictures'
 ### Shutdown, reboot, lock screen
 set $Locker i3lock && sleep 1
 set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
