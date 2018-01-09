@@ -39,14 +39,6 @@ bindsym $mod+Return exec gnome-terminal
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)
-#bindsym $mod+d exec --no-startup-id dmenu_run -b -fn 'Dejavu Sans Mono:10' -nb '#111111' -nf '#ffffff' -sb '#111111' -sf '#c80000'
-# There also is the (new) i3-dmenu-desktop which only displays applications
-# shipping a .desktop file. It is a wrapper around dmenu, so you need that
-# installed.
-#bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
-bindsym $mod+d exec --no-startup-id rofi -show run
-
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
@@ -100,7 +92,7 @@ bindsym $mod+a focus parent
 # switch to workspace
 bindsym $mod+1 workspace 1|
 bindsym $mod+2 workspace 2|
-bindsym $mod+3 workspace 3|; exec nautilus
+bindsym $mod+3 workspace 3|
 bindsym $mod+4 workspace 4|
 bindsym $mod+5 workspace 5| 
 bindsym $mod+6 workspace 6
@@ -112,7 +104,7 @@ bindsym $mod+0 workspace 10
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace 1|
 bindsym $mod+Shift+2 move container to workspace 2|
-bindsym $mod+Shift+3 move container to workspace 3|
+bindsym $mod+Shift+3 move container to workspace 3|
 bindsym $mod+Shift+4 move container to workspace 4|
 bindsym $mod+Shift+5 move container to workspace 5|
 bindsym $mod+Shift+6 move container to workspace 6
@@ -181,18 +173,30 @@ client.focused_inactive #141414 #141414 #00b0ef #472b2a
 client.unfocused #141414 #141414 #7d7d7d #141414
 client.urgent #ff7066 #ff7066 #141414 #ff7066
 
-########## My stuff ##########
-# Sound Control
-bindsym XF86AudioRaiseVolume exec amixer -q set Master 5%+ -q # increase volume
-# bindsym $mod+SHIFT+Up exec amixer set Master 5.0%+
-bindsym XF86AudioLowerVolume exec amixer -q set Master 5%- -q # decrease volume
-# bindsym $mod+SHIFT+Down exec amixer set Master 5.0%-
-bindsym XF86AudioMute exec aximer -q set Master toggle # mute volume
-# bindsym $mod+F2 exec amixer set Master 5%-
-# bindsym $mod+F3 exec amixer set Master 5%+
+############################### My stuff #######################################3
+### Sound Control
+# increase volume
+#bindsym XF86AudioRaiseVolume exec amixer -q set Master 5%+ -q
+bindsym XF86AudioRaiseVolume exec amixer -D pulse sset Master 5%+ && pkill -RTMIN+1 i3blocks
+
+# decrease volume
+#bindsym XF86AudioLowerVolume exec amixer -q set Master 5%- -q
+bindsym XF86AudioLowerVolume exec amixer -D pulse sset Master 5%- && pkill -RTMIN+1 i3blocks
+
+# mute volume
+#bindsym XF86AudioMute exec aximer -q set Master toggle
+bindsym XF86AudioMute exec amixer sset Master toggle && killall -USR1 i3blocks
 
 # Toggle pause cmus player
 bindsym XF86AudioPlay exec cmus-remote -u
+
+### Brightness Control
+# decrease screen brightness
+bindsym XF86MonBrightnessDown   exec xbacklight -dec 10 && pkill -RTMIN+1 i3blocks
+bindsym $mod+F11                exec xbacklight -dec 10 && pkill -RTMIN+1 i3blocks
+# increase screen brightness
+bindsym XF86MonBrightnessUp     exec xbacklight -inc 10 && pkill -RTMIN+1 i3blocks
+bindsym $mod+F12                exec xbacklight -inc 10 && pkill -RTMIN+1 i3blocks
 
 # switching between workspace
 bindsym $mod+n workspace next
@@ -200,24 +204,9 @@ bindsym $mod+p workspace prev
 bindsym $mod+mod1+n move container to workspace next
 bindsym $mod+mod1+p move container to workspace prev
 
-# Screen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
-bindstm XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
-# bindsym $mod+F11 exec xbacklight -dec 20
-# bindsym $mod+F12 exec xbacklight -inc 20
-
 # Touchpad controls
 bindsym XF86TouchpadToggle exec ./toggletouchpad.sh
 
-### Start-Up apps
-# Set a Wallpaper
-exec --no-startup-id nitrogen --restore # First run nitrogen and select picture
-# exec --no-startup-id feh --bg-scale ~/Pictures/Wallpapers/HowToLearnEmacs.png
-exec --no-startup-id i3-msg 'workspace 4:; exec /usr/bin/firefox'
-
-### My own Shortcuts
-bindsym $mod+m exec rhythmbox
-bindsym Print exec scrot 'Screenshot - %Y-%m-%d--%_$wx$h_scrot.png' -e 'mv $f ~/Pictures'
 ### Shutdown, reboot, lock screen
 set $Locker i3lock && sleep 1
 set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
@@ -254,3 +243,52 @@ bindsym $mod+x mode "$mode_display"
 # Fontaweome -> http://fontawesome.io/cheatsheet/
 # We adding workspace icon.
 
+# start dmenu (a program launcher)
+#bindsym $mod+d exec --no-startup-id dmenu_run -b -fn 'Dejavu Sans Mono:10' -nb '#111111' -nf '#ffffff' -sb '#111111' -sf '#c80000'
+# There also is the (new) i3-dmenu-desktop which only displays applications
+# shipping a .desktop file. It is a wrapper around dmenu, so you need that
+# installed.
+#bindsym $mod+d 		exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+Shift+i exec rofi \
+                            -show run \
+				            -lines 3 -eh 2 -width 100 \
+				            -padding 460 -opacity "85" \
+				            -bw 0 -bc "$bg-color" \
+				            -bg "$bg-color" -fg "$text-color" \
+				            -hlbg "$bg-color" -hlfg "#9575cd" \
+				            -font "Ohsnap Bold 18"
+
+bindsym $mod+d exec rofi \
+                        -show run \
+                        -font "Inconsolata 14" \
+				        -opacity 90 -dpi 144
+bindsym $mod+Shift+d exec rofi \
+                            -show drun \
+                            -font "Inconsolata 14" -opacity 90 -dpi 144
+bindsym Mod1+Tab exec rofi \
+                        -show window \
+                        -font "Inconsolata 14" -opacity 90 -dpi 144
+
+# Shortcuts
+bindsym $mod+Print exec gnome-screenshot
+bindsym $mod+m exec rhythmbox
+bindsym Print exec scrot 'Screenshot - %Y-%m-%d--%_$wx$h_scrot.png' -e 'mv $f ~/Pictures'
+
+### Start-Up apps
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec --no-startup-id nm-applet
+exec compton -f
+# Set a Wallpaper
+exec --no-startup-id nitrogen --restore # First run nitrogen and select picture
+# exec --no-startup-id feh --bg-scale ~/Pictures/Wallpapers/HowToLearnEmacs.png
+exec --no-startup-id i3-msg 'workspace 4:; exec /usr/bin/firefox'
+
+
+# disable window borders
+for_window [class="^.*"] border pixel 4
+
+# i3-gaps
+gaps inner 10
+gaps outer 10
+smart_gaps on
+smart_borders on
