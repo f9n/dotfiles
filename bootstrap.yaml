@@ -1,0 +1,122 @@
+#!/usr/bin/env ansible-playbook
+- name: Bootstrap development environment
+  hosts: localhost
+  connection: local
+  vars:
+    SHELL_PROFILE: "{{ ansible_user_dir }}/.{{ ansible_user_shell | basename | regex_replace('$', '_') | regex_replace('zsh_', 'z') }}profile"
+    SHELL_RC: "{{ ansible_user_dir }}/.{{ ansible_user_shell | basename }}rc"
+    SHELL: "{{ ansible_user_shell | basename | quote }}"
+    general_packages:
+      - git
+      - curl
+      - coreutils
+      - htop
+      - diff-so-fancy
+      - tree
+      - buf
+      - goreleaser
+    k8s_packages:
+      - kubectl
+      - kubie
+      - helm
+      - stern
+      - krew
+    gui_packages:
+      - visual-studio-code
+      - warp
+      - jetbrains-toolbox
+      - podman-desktop
+      - vlc
+  tasks:
+  - name: Update homebrew packages
+    community.general.homebrew:
+      update_homebrew: true
+
+  - name: Install general packages with brew
+    community.general.homebrew:
+      name: "{{ item }}"
+      state: present
+    loop: "{{ general_packages }}"
+    when: ansible_system == 'Darwin'
+
+  - name: Install k8s packages with brew
+    community.general.homebrew:
+      name: "{{ item }}"
+      state: present
+    loop: "{{ k8s_packages }}"
+    when: ansible_system == 'Darwin'
+
+  - name: Install gui packages with brew
+    community.general.homebrew:
+      name: "{{ item }}"
+      state: present
+    loop: "{{ gui_packages }}"
+    ignore_errors: true
+    when: ansible_system == 'Darwin'
+
+  - name: Install Oh My ZSH
+    shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    args:
+      creates: "/Users/{{ lookup('env', 'USER') }}/.oh-my-zsh"
+
+  - name: Install asdf
+    block:
+      - name: install asdf by Homebrew
+        community.general.homebrew:
+          name:
+            - asdf
+
+      - name: set env vars (zsh)
+        lineinfile:
+          dest: "{{ SHELL_RC }}"
+          state: present
+          line: "{{ item.line }}"
+        with_items:
+        - line: ". $(brew --prefix)/share/zsh/site-functions"
+          regexp: '^ \. \$(brew --prefix)/share/zsh/site-functions'
+        - line: '. $(brew --prefix asdf)/libexec/asdf.sh'
+          regexp: '^ \. \$(brew --prefix asdf)/libexec/asdf\.sh'
+        when: SHELL == 'zsh'
+    when: ansible_system == 'Darwin'
+
+  - name: Install nodejs with asdf
+    vars:
+      package_name: nodejs
+      package_url: https://github.com/asdf-vm/asdf-nodejs.git
+      version: "18.17.1"
+    block:
+      - name: Add plugin
+        shell: |
+          asdf plugin add {{ package_name }} {{ package_url }} || exit 0
+
+      - name: Install default version
+        shell: |
+          asdf install {{ package_name }} {{ version }}
+          asdf global {{ package_name }} {{ version }}
+    when: ansible_system == 'Darwin'
+
+  - name: Install golang with asdf
+    vars:
+      package_name: golang
+      package_url: https://github.com/asdf-community/asdf-golang.git
+      version: "1.21.0"
+    block:
+      - name: Add plugin
+        shell: |
+          asdf plugin add {{ package_name }} {{ package_url }} || exit 0
+
+      - name: Install default version
+        shell: |
+          asdf install {{ package_name }} {{ version }}
+          asdf global {{ package_name }} {{ version }}
+
+      - name: set env vars (zsh)
+        lineinfile:
+          dest: "{{ SHELL_RC }}"
+          state: present
+          line: "{{ item.line }}"
+        with_items:
+        - line: '. ~/.asdf/plugins/golang/set-env.zsh'
+          regexp: '^ \. \~/\.asdf/plugins/golang/set-env\.zsh'
+        when: SHELL == 'zsh'
+    when: ansible_system == 'Darwin'
